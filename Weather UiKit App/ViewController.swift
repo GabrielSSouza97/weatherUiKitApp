@@ -117,6 +117,15 @@ class ViewController: UIViewController {
         return stack
     }()
     
+    private lazy var forecastLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
+        label.textColor = UIColor.white
+        label.text = "10km/h"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     // MARK: - Life Cycle
 
     override func viewDidLoad() {
