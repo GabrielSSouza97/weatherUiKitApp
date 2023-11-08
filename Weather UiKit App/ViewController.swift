@@ -32,7 +32,7 @@ class ViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 20)
         label.textAlignment = .center
         label.text = "Florianópolis"
-        label.textColor = UIColor(named: "primaryColor")
+        label.textColor = UIColor.primaryColor
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -42,7 +42,7 @@ class ViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 70, weight: .bold)
         label.textAlignment = .center
         label.text = "25°C"
-        label.textColor = UIColor(named: "primaryColor")
+        label.textColor = UIColor.primaryColor
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -117,13 +117,27 @@ class ViewController: UIViewController {
         return stack
     }()
     
-    private lazy var forecastLabel: UILabel = {
+    private lazy var hourlyForecastLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
         label.textColor = UIColor.white
-        label.text = "10km/h"
+        label.text = "PREVISÃO POR HORA"
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    private lazy var hourlyCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 67, height: 84)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.backgroundColor = .clear
+        collection.dataSource = self
+        collection.register(HourlyForecastCollectionViewCell.self, forCellWithReuseIdentifier: HourlyForecastCollectionViewCell.identifier)
+        collection.translatesAutoresizingMaskIntoConstraints = false
+        return collection
     }()
     
     // MARK: - Life Cycle
@@ -149,6 +163,8 @@ class ViewController: UIViewController {
         temperatureView.addSubview(sunImageView)
         
         view.addSubview(statsStackView)
+        view.addSubview(hourlyForecastLabel)
+        view.addSubview(hourlyCollectionView)
     }
     
     private func setupConstraints() {
@@ -179,9 +195,30 @@ class ViewController: UIViewController {
             
             statsStackView.topAnchor.constraint(equalTo: temperatureView.bottomAnchor, constant: 24),
             statsStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            statsStackView.widthAnchor.constraint(equalToConstant: 206)
+            statsStackView.widthAnchor.constraint(equalToConstant: 206),
+            
+            hourlyForecastLabel.topAnchor.constraint(equalTo: statsStackView.bottomAnchor, constant: 29),
+            hourlyForecastLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            hourlyCollectionView.topAnchor.constraint(equalTo: hourlyForecastLabel.bottomAnchor, constant: 22),
+            hourlyCollectionView.heightAnchor.constraint(equalToConstant: 84),
+            hourlyCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hourlyCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
 
+}
+
+extension ViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 12
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HourlyForecastCollectionViewCell.identifier, for: indexPath)
+        
+        return cell
+    }
 }
 
