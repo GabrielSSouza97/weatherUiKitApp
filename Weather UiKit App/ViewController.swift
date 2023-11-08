@@ -140,6 +140,26 @@ class ViewController: UIViewController {
         return collection
     }()
     
+    private lazy var dailyForecastLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
+        label.textColor = UIColor.white
+        label.text = "PRÓXIMOS DIAS"
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var dailyForecastTableView: UITableView = {
+        let table = UITableView()
+        table.dataSource = self
+        table.backgroundColor = .clear
+        table.register(DailyForecastTableViewCell.self, forCellReuseIdentifier: DailyForecastTableViewCell.identifier)
+        table.separatorColor = .white
+        table.translatesAutoresizingMaskIntoConstraints = false
+        return table
+    }()
+    
     // MARK: - Life Cycle
 
     override func viewDidLoad() {
@@ -165,6 +185,8 @@ class ViewController: UIViewController {
         view.addSubview(statsStackView)
         view.addSubview(hourlyForecastLabel)
         view.addSubview(hourlyCollectionView)
+        view.addSubview(dailyForecastLabel)
+        view.addSubview(dailyForecastTableView)
     }
     
     private func setupConstraints() {
@@ -203,7 +225,15 @@ class ViewController: UIViewController {
             hourlyCollectionView.topAnchor.constraint(equalTo: hourlyForecastLabel.bottomAnchor, constant: 22),
             hourlyCollectionView.heightAnchor.constraint(equalToConstant: 84),
             hourlyCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            hourlyCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            hourlyCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            dailyForecastLabel.topAnchor.constraint(equalTo: hourlyCollectionView.bottomAnchor, constant: 29),
+            dailyForecastLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            dailyForecastTableView.topAnchor.constraint(equalTo: dailyForecastLabel.bottomAnchor, constant: 16),
+            dailyForecastTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            dailyForecastTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            dailyForecastTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 
@@ -217,6 +247,19 @@ extension ViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HourlyForecastCollectionViewCell.identifier, for: indexPath)
+        
+        return cell
+    }
+}
+
+extension ViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 7
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: DailyForecastTableViewCell.identifier, for: indexPath)
         
         return cell
     }

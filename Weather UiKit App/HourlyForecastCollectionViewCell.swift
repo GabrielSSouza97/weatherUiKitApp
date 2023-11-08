@@ -77,12 +77,9 @@ class HourlyForecastCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupContraints() {
+        mainCellStackView.setConstraintsToParent(contentView)
+        
         NSLayoutConstraint.activate([
-            mainCellStackView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            mainCellStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            mainCellStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            mainCellStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            
             iconSunImageView.widthAnchor.constraint(equalToConstant: 33),
             iconSunImageView.heightAnchor.constraint(equalToConstant: 33)
         ])
